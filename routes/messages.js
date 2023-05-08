@@ -42,7 +42,7 @@ router.post('/', ensureLoggedIn, async(req, res, send) => {
   try { 
     let message = await Message.create({
       from_username: req.user.username,
-      to_username: req.body.username,
+      to_username: req.body.to_username,
       body: req.body.body
     });
     return res.json({message})
@@ -59,8 +59,8 @@ router.post('/', ensureLoggedIn, async(req, res, send) => {
  * Make sure that the only the intended recipient can mark as read.
  *
  **/
-router.post('/:id/read', ensureLoggedIn, async (req, res, send) => {
-  try {
+router.post('/:id/read', ensureLoggedIn, async (req, res, next) => {
+  try { 
     let username = req.user.username;
     let msgGet = await Message.get(req.params.id);
     if(msgGet.to_user.username !== username){
